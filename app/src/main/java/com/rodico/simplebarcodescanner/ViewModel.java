@@ -39,9 +39,6 @@ public class ViewModel {
     }
 
     private void startScan() {
-        /**
-         * Build a new MaterialBarcodeScanner
-         */
         final MaterialBarcodeScanner materialBarcodeScanner = new MaterialBarcodeScannerBuilder()
                 .withActivity(activity)
                 .withEnableAutoFocus(true)
