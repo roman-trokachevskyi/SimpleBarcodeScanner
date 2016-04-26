@@ -77,7 +77,6 @@ public class ViewModel {
         }
         try {
             FileOutputStream stream = new FileOutputStream(file);
-//            stream.write(otputRes.toString().getBytes());
             String s = otputRes.toString();
             for (int i = 0; i < s.length(); i++) {
                 stream.write(s.charAt(i));
