@@ -64,7 +64,6 @@ public class ViewModel {
 
     public void export(View view) {
         Investigator.log(this, otputRes.toString() + "\n\n\n\n");
-
         Date date = new Date();
         File file = null;
         try {
