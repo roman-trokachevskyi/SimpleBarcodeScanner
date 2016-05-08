@@ -1,11 +1,13 @@
 package com.rodico.simplebarcodescanner;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
+import android.widget.EditText;
 
 import com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScanner;
 import com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScannerBuilder;
@@ -30,13 +32,44 @@ public class ViewModel {
     ObservableField<String> prefix = new ObservableField<>("");
     ObservableField<String> showingRes = new ObservableField<>();
     ObservableField<String> showingScanned = new ObservableField<>();
+    String qty;
+    String fileName;
 
     public ViewModel(MainActivity activity) {
         this.activity = activity;
         otputRes = new StringBuilder("");
-        otputRes.append("");
+        otputRes.append("\n");
         showingRes.set("");
+        EditText fileNameEt = activity.binding.fileNameEt;
+        ((EditText) fileNameEt).setSelection(fileNameEt.getText().length());
     }
+
+    public void clear() {
+        scanned = 0;
+        otputRes = new StringBuilder("");
+        otputRes.append("\n");
+        showingRes.set("");
+        qty = "0";
+    }
+
+    public void proposeClear(View view) {
+        AlertDialog dialog = new AlertDialog.Builder(activity).setMessage("Очистити данні?")
+                .setTitle("Ви впевнені?")
+                .setPositiveButton("Очистити", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        clear();
+                    }
+                })
+                .setNegativeButton("Відміити", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
+
 
     private void startScan() {
         final MaterialBarcodeScanner materialBarcodeScanner = new MaterialBarcodeScannerBuilder()
@@ -50,7 +83,8 @@ public class ViewModel {
                     public void onResult(Barcode barcode) {
                         barcodeResult = barcode;
                         prefix.set(activity.binding.prefEt.getText().toString());
-                        String str = prefix.get() + barcodeResult.rawValue + "\n";
+                        qty = activity.binding.qtyEt.getText().toString();
+                        String str = barcodeResult.rawValue + "-" + prefix.get() + "-" + qty + "\n";
                         otputRes.append(str);
                         Investigator.log(this, "Scanned: --- " + str);
                         showingRes.set(showingRes.get() + str);
@@ -66,8 +100,9 @@ public class ViewModel {
         Investigator.log(this, otputRes.toString() + "\n\n\n\n");
         Date date = new Date();
         File file = null;
+        fileName = activity.binding.fileNameEt.getText().toString();
         try {
-            file = new File(activity.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "BarCodes_" + date.getTime() + ".txt");
+            file = new File(activity.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName + ".txt");
             file.createNewFile();
 //            file.deleteOnExit();
             file.setReadable(true, false);
@@ -92,16 +127,6 @@ public class ViewModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public File getTempFile(Context context, String name) {
-        File file = null;
-        try {
-            file = File.createTempFile(name, null, context.getCacheDir());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file;
     }
 
     public void onScanClick(View view) {

@@ -7,10 +7,6 @@
             type="com.rodico.simplebarcodescanner.ViewModel" />
     </data>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -19,6 +15,12 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
+
+            <EditText
+                android:id="@+id/file_name_et"
+                android:hint="File Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:layout_alignParentTop="true"
@@ -30,11 +32,12 @@
                     android:id="@+id/pref_et"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:hint="PreFix"
+                    android:hint="Price"
                     android:text="@{model.prefix}" />
 
                 <EditText
-                    android:hint="Count"
+                    android:id="@+id/qty_et"
+                    android:hint="Qty"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content" />
 
@@ -48,10 +51,16 @@
                 android:textSize="32sp"
                 android:onClick="@{model.onScanClick}" />
 
-            <TextView
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:text="@{model.showingRes}" />
+                android:layout_height="260dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.showingRes}"/>
+            </ScrollView>
+
 
             <TextView
                 android:gravity="center_horizontal"
@@ -67,7 +76,15 @@
                 android:text="EXPORT"
                 android:textSize="24sp"
                 android:onClick="@{model.export}" />
+
+            <Button
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Очистити данні"
+                android:background="@android:color/holo_red_light"
+                android:textSize="24sp"
+                android:onClick="@{model.proposeClear}"/>
         </LinearLayout>
-    </ScrollView>
 
 </layout>
